@@ -10,6 +10,7 @@ class Departement_Controller extends Controller
     //
     public function Departement_Vue()
     {
+        //Teste
         $Deparetements = DB::table('deparetements')
         ->orderBy('created_at', 'desc')
         ->get();
