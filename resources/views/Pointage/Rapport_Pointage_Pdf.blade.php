@@ -20,31 +20,36 @@
         }
     </style>
     <h1>Rapport de Pointage </h1>
-    <p>Période pointage de {{$Date_debut}} à {{$Date_fin}}</p>
+    @if ($Date_debut >= '2022-11-01')
+      <p>Période pointage de {{$Date_debut}} à {{$Date_fin}}</p>  
+    @endif
+    
     @if ($Filter_1 == '0')
     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
         <thead style="background-color: #1E90FF;color:white;">
             <tr>
                 <th>Id employee</th>
+                <th>Nom complet</th>
+                <th>Mtaricule</th>
                 <th>N de carte </th>
                 <th>Bloc houraire</th>
                 <th>Entre</th>
                 <th>Sortir</th>
-                <th>Mtaricule</th>
-                <th>Nom complet</th>
+                
+                
             </tr>
             </thead>
-
-            
             <tbody class="Rapport_Pointage_Div">
                 <tr>
             <td>{{$Employee->id}}</td>
+            <td>{{$Employee->Nom.' '.$Employee->Prenom}}</td>
+            <td>{{$Employee->Cin}}</td>
             <td>76000</td>
             <td>{{$Deparetement->id}}</td>
             <td>{{$Deparetement->Date_Debut}}</td>
             <td>{{$Deparetement->Date_Fin}}</td>
-            <td>{{$Employee->Cin}}</td>
-            <td>{{$Employee->Nom.' '.$Employee->Prenom}}</td>
+            
+            
         </tr>
                 
             </tbody>
@@ -94,11 +99,13 @@
                     <td>{{$Rapport_Pointage->Temp_Traville}}</td>
                     <?php $Rapport_Pointage->Temp_Traville_supplementaire = intdiv($Rapport_Pointage->Temp_Traville_supplementaire, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire % 60);   ?>
                     <td>{{$Rapport_Pointage->Temp_Traville_supplementaire}}</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <?php $Rapport_Pointage->Temp_Traville_supplementaire_1 = intdiv($Rapport_Pointage->Temp_Traville_supplementaire_1, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire_1 % 60);   ?>
+                    <td>{{$Rapport_Pointage->Temp_Traville_supplementaire_1}}</td>
+                    <?php $Rapport_Pointage->Temp_Traville_supplementaire_2 = intdiv($Rapport_Pointage->Temp_Traville_supplementaire_2, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire_2 % 60);   ?>
+                    <td>{{$Rapport_Pointage->Temp_Traville_supplementaire_2}}</td>
+                    <?php $Rapport_Pointage->R_T = intdiv($Rapport_Pointage->R_T, 60).':'. ($Rapport_Pointage->R_T % 60);   ?>
                     <td>{{$Rapport_Pointage->R_T}}</td>
                     <td>{{$Rapport_Pointage->Absence}}</td>
-                    
                     <td>
                     {{$Rapport_Pointage->Opservation}}
                     </td>
@@ -120,8 +127,8 @@
                     <td>Totale:</td>
                     <td>{{$T_T}}</td>
                     <td>{{$H_S}}</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>0:0</td>
+                    <td>0:0</td>
                     <td>{{$R_T}}</td>
                     <td></td>
                     <td></td>

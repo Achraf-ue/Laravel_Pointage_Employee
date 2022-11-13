@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
             DB::table('recent_users')->delete();
         })->daily();*/
 
-        //  $schedule->command('Calcule:Pointage')->dailyAt('14:45')->timezone('Africa/Casablanca');
+        //  $schedule->command('Calcule:Pointage')->dailyAt('23:59')->timezone('Africa/Casablanca');
 
 
 

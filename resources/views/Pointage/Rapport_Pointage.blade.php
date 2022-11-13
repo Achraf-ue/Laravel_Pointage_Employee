@@ -34,9 +34,9 @@
                                     
                                 </select>
                                 <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control Type"  id="Rapport_Pointage_Matricule">
-                                    <option value="">Matricule</option>
+                                    <option value="">Nom complet</option>
                                     @foreach ($Employees as $Employe)
-                                    <option value="{{$Employe->id}}">{{$Employe->Cin}}</option>
+                                    <option value="{{$Employe->id}}">{{$Employe->Nom.' '.$Employe->Prenom}}</option>
                                     @endforeach
                                     
                                 </select>
@@ -73,6 +73,7 @@
                                     <th>Temp de retard</th>
                                     <th>Absence</th>
                                     <th>Opservation</th>
+                                    <th>Pénalité</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -82,7 +83,8 @@
                                     @foreach ($Rapport_Pointages as $Rapport_Pointage)
                                     <?php  $id = $Rapport_Pointage->id  ?>
                                     <tr id="{{$id}}" 
-                                    @if ($Rapport_Pointage->Opservation == 'Eregulie' ) style="background-color:#fec918" @endif>
+                                    @if ($Rapport_Pointage->Opservation == 'Eregulie' ) style="background-color:#fec918"
+                                    @elseif ($Rapport_Pointage->Opservation == 'Ajouté manuellement') style="background-color:#3498DB" @endif>
                                         <?php $date = Carbon\Carbon::parse($Rapport_Pointage->Date_Jour)->locale('fr_FR'); ?>
                                         <td>{{$date->dayName}}</td>
                                         <td>{{$Rapport_Pointage->Date_Jour}}</td>
@@ -105,12 +107,15 @@
                                         <td>{{$Rapport_Pointage->Temp_Traville}}</td>
                                         <?php $Rapport_Pointage->Temp_Traville_supplementaire = intdiv($Rapport_Pointage->Temp_Traville_supplementaire, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire % 60);   ?>
                                         <td>{{$Rapport_Pointage->Temp_Traville_supplementaire}}</td>
-                                        <td>0</td>
-                                        <td>0</td>
+                                        <?php $Rapport_Pointage->Temp_Traville_supplementaire_1 = intdiv($Rapport_Pointage->Temp_Traville_supplementaire_1, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire_1 % 60);   ?>
+                                        <td>{{$Rapport_Pointage->Temp_Traville_supplementaire_1}}</td>
+                                        <?php $Rapport_Pointage->Temp_Traville_supplementaire_2 = intdiv($Rapport_Pointage->Temp_Traville_supplementaire_2, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire_2 % 60);   ?>
+                                        <td>{{$Rapport_Pointage->Temp_Traville_supplementaire_2}}</td>
                                         @if ($Rapport_Pointage->R_T != null)
-                                            <td>{{$Rapport_Pointage->R_T.' Minutes'}}</td>
+                                        <?php $Rapport_Pointage->R_T = intdiv($Rapport_Pointage->R_T, 60).' heures : '. ($Rapport_Pointage->R_T % 60).' minutes';?>
+                                            <td>{{$Rapport_Pointage->R_T}}</td>
                                         @else
-                                        <td>0 Minutes</td>
+                                        <td></td>
                                         @endif
 
                                         
@@ -132,6 +137,9 @@
                                         
                                            
                                         </span>
+                                        </td>
+                                        <td>
+                                            {{$Rapport_Pointage->tollerence.' Minutes'}}
                                         </td>
                                         
                                         <td>

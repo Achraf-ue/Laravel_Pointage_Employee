@@ -49,6 +49,8 @@
                                     <th>Nom</th>
                                     <th>Prenom</th> 
                                     <th>Adress</th>
+                                    <th>Telephone</th>
+                                    <th>Image</th>
                                     <th>Departement</th>
                                     <th>Action</th>
                                 </tr>
@@ -57,16 +59,22 @@
 
                                 <tbody class="Departement_Div">
                                 @foreach ($Employes as $Employe)
-                                <tr>
+                                <tr style="text-align: center;">
                                     <td>{{$Employe->id }}</td>
                                     <td>{{$Employe->Cin }}</td>
                                     <td>{{$Employe->Nom}}</td>
                                     <td>{{$Employe->Prenom}}</td>
                                     <td>{{$Employe->Adress}}</td>
+                                    <td><a href="{{'https://wa.me/+212'.substr($Employe->telephone, 1)}}" id="Wattsap" style="margin-top: 10px;"  target="_blank" ><i class="fab fa-whatsapp-square fa-3x"></i></a></td>
+                                    <td><img class="d-flex mr-3 rounded-circle" src="{{asset($Employe->Employee_Image)}}" alt="Generic placeholder image" height="64"></td>
                                     <td>{{$Employe->Deparetement_Nom}}</td>
                                     <td>
                                 <a href="{{route('Employee.Moidfier',$Employe->id)}}"><button type="button" class="btn btn-success waves-effect waves-light">Modifier</button></a> 
                                 <a id="Delete" href="{{route('Employee.Delete',$Employe->id)}}"><button type="button"  class="btn btn-danger waves-effect waves-light">delete</button></a> 
+                                <a class="view_employee" data-id="{{$Employe->id}}" ><button type="button" id="Button_View"   class="btn btn-info waves-effect waves-light"><i class="ti-eye"></i></button></a>
+                                <!--
+                                $watssap_finale = "https://wa.me/+21".$Num;
+                                -->
                                     </td>
                                    
                                 </tr>

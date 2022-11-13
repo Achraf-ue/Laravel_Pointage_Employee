@@ -1,3 +1,4 @@
+<?php use Illuminate\Support\Facades\Auth;  ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -188,7 +189,8 @@
 
         </div>
         <!-- END wrapper -->
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>  
         <!-- jQuery  -->
         <script src="{{ asset('backend/assets/js/jquery.min.js')}}"></script>
         <script src="{{ asset('backend/assets/js/bootstrap.bundle.min.js')}}"></script>
@@ -219,10 +221,7 @@
           <script src="{{ asset('backend/assets/pages/datatables.init.js')}}"></script>       
         <!-- fin datatable -->
         <!--Chartist Chart-->
-        <script src="{{ asset('backend/assets/plugins/chartist/js/chartist.min.js')}}"></script>
-        <script src="{{ asset('backend/assets/plugins/chartist/js/chartist-plugin-tooltip.min.js')}}"></script>
-
-        <!-- peity JS -->
+                <!-- peity JS -->
         <script src="{{ asset('backend/assets/plugins/peity-chart/jquery.peity.min.js')}}"></script>
 
         <script src="{{ asset('backend/assets/pages/dashboard.js')}}"></script>
@@ -242,6 +241,7 @@
         <script src="{{asset('backend/assets/plugins/moment/moment.js')}}"></script>
         <script src="{{asset('backend/assets/plugins/moment/moment.min.js')}}"></script>
         <script src="{{asset('backend/assets/plugins/daterangepicker.js')}}"></script>
+        <script src="{{ asset('backend/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js')}}"></script>
         <script>
          @if(Session::has('message'))
          var type = "{{ Session::get('alert-type','info') }}"
@@ -304,11 +304,52 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<!--  Modal absence   -->
+<div id="Modal_Absences_Detaille" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="mySmallModalLabel">Absenece Detailles</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body-Absence">
+               
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Fin modal absence  -->
+<div id="Modal_Employe_Detaille"  class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="mySmallModalLabel">Detailles</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body-employee">
+               
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="Modal_Societe_Detaille"  class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="mySmallModalLabel">Detailles Societé</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body-s">
+               
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
     $(document).ready(function(){
         
-         //$('#table_1').DataTable();
-         $( "#datepicker" ).datepicker();
+         $('#table_1').DataTable();
+         $( ".datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
          $(document).on('change','.Motive_Absence', function(){
             var ID_Rapport  = $(this).find(':selected').data('id')
             var Motive_Absence  = $(this).val();
@@ -338,11 +379,67 @@
                      data: {
                       "_token": "{{ csrf_token() }}", 
                       Id_Retard:Id_Retard}, beforeSend:function(){
+                        $("#global").show();
                  },
                      success: function(response){
                         //toastr.success("Bien Recherche");
                         console.log(response);
+                        $("#global").hide();
                         $('.modal-body').html(response); 
+                        /* Inisialiser retard */
+                                $.ajax({
+                                url: "{{ route('Retard_Notification_') }}",
+                                type: 'get',
+                                data: {
+                                "_token": "{{ csrf_token() }}", 
+                                }, beforeSend:function(){
+                            },
+                                success: function(response){
+                                    //toastr.success('Pointage bien telecharger');
+                                    $(".Pointage_Retard_Notification").html(response);  
+                                }
+                            });
+                        /* Fin */
+                        //Teste
+                        $("#pie-chart").remove();
+                        $("#chart-container").append('<canvas id="pie-chart"></canvas>');
+                        $.ajax({
+              url: "{{ route('Chart_rapport_R') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}"}, beforeSend:function(){
+          },
+              success: function(response){
+                                        new Chart(document.getElementById("pie-chart"), {
+                            type: 'bar',
+                            data: {
+                            labels: ["Absences", "Retards",'Congé'],
+                            datasets: [{
+                                label: "",
+                                backgroundColor: ["#3e95cd", "#8e5ea2","#fec918"],
+                                data: response
+                            }]
+                            },
+                            options: {
+                                responsive : true,
+                            title: {
+                                display: true,
+                            },
+                            plugins: {
+                                    datalabels: {
+                                        formatter: function(value) {
+                                            return value + ' %';
+                                        },
+                                        color: '#fff'
+                                    }
+                                }
+                            
+                            }    
+                        });                
+
+                            }
+                        });
+                        //Fin teste
                         $('#Modal_Retard_Detaille').modal('show'); 
                      }
                  });
@@ -360,8 +457,8 @@
         
         
         $(document).on('click','#Delete', function(e){
-        e.preventDefault();
-        var link = $(this).attr('href');
+            e.preventDefault();
+            var link = $(this).attr('href');
             Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -378,6 +475,27 @@
       'Your file has been deleted.',
       'success')}})
         });
+//Suprimmer pointeuse
+$(document).on('click','#Delete_Pointeuse', function(e){
+            e.preventDefault();
+            var link = $(this).attr('href');
+            Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+       if (result.isConfirmed) {
+       window.location.href = link;
+       Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success')}})
+        });
+//Fin suprimmer pointeuse
         
 
 
@@ -398,6 +516,7 @@
       $('#Employe').select2();
       $('#Employe_1').select2();
       $('#Employe_2').select2();
+      $('#Employe_3').select2();
       $(document).on('change','#Employe', function(){
        var Filter_1  = $("#Employe").val();
        //alert(Filter_1);
@@ -638,8 +757,33 @@
       /*Rangebicker*/
       var start =moment().subtract(100,'year');
       var end = moment().add(100,'year');
-      function cb(start, end) {$('#Range_1 span').html('Achraf');}//start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY')
+      function cb(start, end) {$('#sRange_1 span').html('Achraf');}//start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY')
       $('#Range_1').daterangepicker({
+        locale: {
+            format: 'YYYY-MM-DD',
+            applyLabel: 'Appliquer',
+            customRangeLabel: 'Personnalisée',
+        },
+        
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Aujourd_hui': [moment(), moment()],
+           'Hier': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Les 7 derniers jours': [moment().subtract(6, 'days'), moment()],
+           'Les 30 derniers jours': [moment().subtract(29, 'days'), moment()],
+           'Ce mois-ci': [moment().startOf('month'), moment().endOf('month')],
+           'Le mois dernier': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+       }, cb);
+
+      //cb(start, end);
+    /*Fin rangebicker*/
+    /*Rangebicker*/
+    var start =moment().subtract(100,'year');
+      var end = moment().add(100,'year');
+      function cb(start, end) {$('#sRange_2 span').html('Achraf');}//start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY')
+      $('#Range_2').daterangepicker({
         locale: {
             format: 'YYYY-MM-DD',
             applyLabel: 'Appliquer',
@@ -729,10 +873,8 @@
       });
     //Fin generate pdf reatrd
     //Rapport Pointage 
-    $(document).on('change','#Generate_Pdf_Rapport_Pointage', function(){
-
-
-var Generate_Facture = $("#Generate_Pdf_Rapport_Pointage").val();
+$(document).on('change','#Generate_Pdf_Rapport_Pointage', function(){
+        var Generate_Facture = $("#Generate_Pdf_Rapport_Pointage").val();
         var Filter_1  = $("#Rapport_Pointage_Matricule").val();
         var Filter_2  = $("#Rapport_Pointage_Departement").val();
         var Filter_3  = $("#Range_1").val();
@@ -764,10 +906,6 @@ var Generate_Facture = $("#Generate_Pdf_Rapport_Pointage").val();
 //Detaille rapport pointage employee
 $(document).on('click','.view_detaiile_rapport_pointage', function(){
             var Id_Rapport  = $(this).attr("data-id");
-            
-        alert(Id_Rapport);
-        
-        
         $.ajax({
                      url: "{{ route('Rapport.Modal') }}",
                      type: 'get',
@@ -819,17 +957,373 @@ $(document).on('click','#Cherche_Rapport_Pointage', function(){
 //Fin recherche pointage employee
 $("#Table_1").DataTable();
 
+//Telecharger pointage
+$(document).on('click','#Telecharger_Pointage', function(){   
+            $.ajax({
+                         url: "{{ route('Telecharger_Pointage') }}",
+                         type: 'get',
+                         data: {
+                          "_token": "{{ csrf_token() }}", 
+                        }, beforeSend:function(){
+                            $("#global").show();
+                     },
+                         success: function(response){
+                            toastr.success('Pointage bien telecharger');
+                            $(".Pointeuse_Div").html(response);
+                            
+                            $("#global").hide();
+                              
+                         }
+                     });
+            });
+    
+//Fin telecharger pointage
+$.ajax({
+                         url: "{{ route('Retard_Notification_') }}",
+                         type: 'get',
+                         data: {
+                          "_token": "{{ csrf_token() }}", 
+                        }, beforeSend:function(){
+                     },
+                         success: function(response){
+                            //toastr.success('Pointage bien telecharger');
+                            $(".Pointage_Retard_Notification").html(response);  
+                         }
+                     });
+//Type_Changement
+$(".Date_Type_Changement").hide();
+$(document).on('change','#Type_Changement', function(){   
+            var Type  = $("#Type_Changement").val();
+            if(Type == 1)
+            $(".Date_Type_Changement").hide();
+            else
+            $(".Date_Type_Changement").show();
+
+            });
+
+//Fin Type_Changement
+//Notification absences
+$.ajax({
+                        url: "{{ route('Absences_Notification_') }}",
+                        type: 'get',
+                        xdata: {
+                          "_token": "{{ csrf_token() }}", 
+                        }, beforeSend:function(){
+                     },
+                         success: function(response){
+                            //toastr.success('Absences');
+                            $(".Pointage_Absences_Notification").html(response);  
+                         }
+                     });
+//Fin notification absences
+//Modal absence
+$(document).on('click','.view_detaiile_Absences', function(){
+            var Id_Absence  = $(this).attr("data-id");
+        $.ajax({
+                     url: "{{ route('Absence.Modal') }}",
+                     type: 'get',
+                     data: {
+                      "_token": "{{ csrf_token() }}", 
+                      Id_Absence:Id_Absence}, beforeSend:function(){
+                        $("#global").show();
+                 },
+                     success: function(response){
+                        //toastr.success("Bien Recherche");
+                        console.log(response);
+                        $("#global").hide();
+                        $('.modal-body-Absence').html(response); 
+                        // Inisialiser retard 
+                        $.ajax({
+                                url: "{{ route('Absences_Notification_') }}",
+                                type: 'get',
+                                xdata: {
+                                "_token": "{{ csrf_token() }}", 
+                                }, beforeSend:function(){
+                            },
+                                success: function(response){
+                                    //toastr.success('Absences');
+                                    $(".Pointage_Absences_Notification").html(response);  
+                                }
+                            });
+                        // Fin
+                        //Teste
+                        $("#pie-chart").remove();
+                        $("#chart-container").append('<canvas id="pie-chart"></canvas>');
+                        $.ajax({
+              url: "{{ route('Chart_rapport_R') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}"}, beforeSend:function(){
+          },
+              success: function(response){
+                                        new Chart(document.getElementById("pie-chart"), {
+                            type: 'bar',
+                            data: {
+                            labels: ["Absences", "Retards",'Congé'],
+                            datasets: [{
+                                label: "",
+                                backgroundColor: ["#3e95cd", "#8e5ea2","#fec918"],
+                                data: response
+                            }]
+                            },
+                            options: {
+                                responsive : true,
+                            title: {
+                                display: true,
+                            },
+                            plugins: {
+                                    datalabels: {
+                                        formatter: function(value) {
+                                            return value + ' %';
+                                        },
+                                        color: '#fff'
+                                    }
+                                }
+                            
+                            }    
+                        });                
+
+                            }
+                        });
+                        //Fin teste
+                        $('#Modal_Absences_Detaille').modal('show'); 
+                     }
+                 });
+        });
+//Fin modal absence
+
+//Rapport pointage detailles 
+$(document).on('click','.rapport_detailles_pointage_pdf', function(){
+    var Id_rapport  = $(this).attr("data-id");
+    alert(Id_rapport);
+    $.ajax({
+              url: "{{ route('Generate.Pointage.Rapport.Detailles.Pdf') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}",
+               Id_rapport:Id_rapport
+            }, beforeSend:function(){
+                $("#global").show();
+          },
+              success: function(response){
+                 $("#global").hide();
+                 window.open(response,'_blank');
+                 console.log(response);
+              }
+          });
+});
+//Fin rapport pointage detailles
 
 
+//Graph pie pointage 
 
+$.ajax({
+              url: "{{ route('Chart_rapport_R') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}"}, beforeSend:function(){
+          },
+              success: function(response){
+                                        new Chart(document.getElementById("pie-chart"), {
+                            type: 'bar',
+                            data: {
+                            labels: ["Absences", "Retards",'Congé'],
+                            datasets: [{
+                                label: "",
+                                backgroundColor: ["#3e95cd", "#8e5ea2","#fec918"],
+                                data: response
+                            }]
+                            },
+                            options: {
+                                responsive : true,
+                            title: {
+                                display: true,
+                            },
+                            plugins: {
+                                    datalabels: {
+                                        formatter: function(value) {
+                                            return value + ' %';
+                                        },
+                                        color: '#fff'
+                                    }
+                                }
+                            
+                            }    
+                        });                
 
+                            }
+          });
+//Fin graph pie pointage
+//View detailles employee
+$(document).on('click','.view_employee', function(){
+    var Id_employee  = $(this).attr("data-id");
+    //alert(Id_employee);
+    $.ajax({
+              url: "{{ route('Employee.Modal') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}",
+               Id_employee:Id_employee
+            }, beforeSend:function(){
+                //$("#global").show();
+          },
+              success: function(response){
+                 //$("#global").hide();
+                 $('.modal-body-employee').html(response); //This 
+                 $('#Modal_Employe_Detaille').modal('show');
+              }
+          });
+});
+//Fin view detailles employe
+//Generate_Pdf_Rapport_Pointage
+//Generate_Pdf_Retards_Pointage
+$(document).on('change','#Generate_Pdf_Retards_Pointage', function(){
+        var Generate_Retards = $("#Generate_Pdf_Retards_Pointage").val();
+        var Filter_1  = $("#Employe_1").val();
+        var Filter_3  = $("#Range_1").val();
+        var Date_debut = Filter_3.slice(0,10);
+        var Date_fin = Filter_3.slice(13,23);
 
-
-
-
-
-
-
-
+ $.ajax({
+              url: "{{ route('Generate.Retard.Pointage.Pdf') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}", 
+               Generate_Retards:Generate_Retards,Filter_1:Filter_1,Date_debut:Date_debut,Date_fin:Date_fin}, beforeSend:function(){
+                $("#global").show();
+          },
+              success: function(response){
+                 $("#global").hide();
+                 if(response == ' ')
+                 toastr.error("Pas disponible");
+                 else
+                 window.open(response,'_blank');
+                 console.log(response);
+              }
     });
+});
+////////////////////////////////////////////////////////////////////
+//Absence filter
+$(document).on('click','#Cherche_Absence', function(){
+       var Filter_1  = $("#Employe_3").val();
+       var Filter_3  = $("#Range_2").val();
+       var Date_debut = Filter_3.slice(0,10);
+       var Date_fin = Filter_3.slice(13,23);
+       //alert('teste');
+       
+        $.ajax({
+                     url: "{{ route('Absence.Filter') }}",
+                     type: 'get',
+                     data: {
+                      "_token": "{{ csrf_token() }}", 
+                      Filter_1:Filter_1,Date_debut:Date_debut,Date_fin:Date_fin}, beforeSend:function(){
+                 },
+                     success: function(response){
+                         toastr.success("Bien Recherche");
+                         $(".Absence_Div").html(response);
+                     }
+                 });
+      });
+//Fin absence filter 
+//
+$(document).on('change','#Generate_Pdf_Absence_Pointage', function(){
+        var Generate_Absence = $("#Generate_Pdf_Absence_Pointage").val();
+        var Filter_1  = $("#Employe_3").val();
+       var Filter_3  = $("#Range_2").val();
+       var Date_debut = Filter_3.slice(0,10);
+       var Date_fin = Filter_3.slice(13,23);
+       //alert(Generate_Absence);
+
+ $.ajax({
+              url: "{{ route('Absence.Pdf') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}", 
+                Generate_Absence :Generate_Absence ,Filter_1:Filter_1,Date_debut:Date_debut,Date_fin:Date_fin}, beforeSend:function(){
+                $("#global").show();
+          },
+              success: function(response){
+                 $("#global").hide();
+                 if(response == ' ')
+                 toastr.error("Pas disponible");
+                 else
+                 window.open(response,'_blank');
+                 console.log(response);
+              }
+    });
+});
+//
+//Departement detailles 
+$(document).on('click','.view_departement_employee', function(){
+    var Id_departement  = $(this).attr("data-id");
+    $.ajax({
+              url: "{{ route('Departement.Modal') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}",
+               Id_departement:Id_departement
+            }, beforeSend:function(){
+                $("#global").show();
+          },
+              success: function(response){
+                 $("#global").hide();
+                 $('.modal-body-employee').html(response); //This 
+                 $('#Modal_Employe_Detaille').modal('show');
+              }
+          });
+});
+//Fin departement detailles
+//Profile user
+$('#image').change(function(e){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                $('#showImage').attr('src',e.target.result);
+            }
+            reader.readAsDataURL(e.target.files['0']);
+        });
+
+
+});
+//Fin profile user
+$(document).on('click','.print_facture', function(){
+            var Id_facture  = $(this).attr("data-id");
+            //alert(Id_facture);
+            var myIframe = document.getElementById(Id_facture).contentWindow;
+            myIframe.focus();
+            myIframe.print();
+});
+//
+$("#Motife_fichie_Input").hide();
+$(document).on('change','#Motif_Absence_Fichier', function(){
+    var Motife_Type = $("#Motif_Absence_Fichier").val();
+    if(Motife_Type != 'Eregulie' )
+    {
+        $("#Motife_fichie_Input").show();
+    }
+    else 
+    $("#Motife_fichie_Input").hide();
+
+});
+//View Sociéte
+$(document).on('click','.view_Societe_employee', function(){
+    var Id_Societe  = $(this).attr("data-id");
+    //alert(Id_Societe);
+    $.ajax({
+              url: "{{ route('Societe.Modal') }}",
+              type: 'get',
+              data: {
+               "_token": "{{ csrf_token() }}",
+               Id_Societe:Id_Societe
+            }, beforeSend:function(){
+                $("#global").show();
+          },
+              success: function(response){
+                 $("#global").hide();
+                 $('.modal-body-s').html(response); //This 
+                 $('#Modal_Societe_Detaille').modal('show');
+              }
+          });
+});
+//Fin view societé
+
 </script>

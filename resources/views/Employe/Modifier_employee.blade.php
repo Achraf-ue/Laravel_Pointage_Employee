@@ -24,13 +24,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST" action="{{route('Employee_Modifier')}}" >
+                            <form method="POST" action="{{route('Employee_Modifier_back_end')}}" enctype="multipart/form-data" >
                             @csrf
-                            <input type="hidden" name="id" value="{{ $Employes->id }}">
+                                   <input class="form-control" type="hidden" value="{{$Employes->id}}"  name="id_employee">
+
+                                   <div style="align-items: center;text-align:center"  class="">
+                                    <img class="rounded-circle" src="{{asset($Employes->Employee_Image)}}" style="height: 150px;width:100px;"  alt="200x200"  data-holder-rendered="true">
+                                </div>
+                                <br>
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-sm-2 col-form-label">Cin</label>
+                                <label for="example-text-input" class="col-sm-2 col-form-label">Matricule</label>
                                 <div class="col-sm-10">
-                                   <input class="form-control" type="text" value="{{$Employes->Cin}}" placeholder="Cin"  name="Cin" id="Cin">
+                                   <input class="form-control" type="text" value="{{$Employes->Cin}}" placeholder="Matricule"  name="Matricule">
                                 </div>
                             </div>
                                 <div class="form-group row">
@@ -52,6 +57,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label for="example-text-input"   class="col-sm-2 col-form-label">Image</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="filestyle" data-input="false" name="Image" data-buttonname="btn-secondary">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Departement</label>
                                     <div class="col-sm-10">
                                         <select class="form-control" name="Departement_employee" id="Departement_employee" style="width: 850px">
@@ -61,7 +72,26 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Type changement</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control Type" name="Type_Changement" id="Type_Changement" style="width: 850px">
+                                            <option value="1"  selected>Type Toujours</option>
+                                            <option value="2" >Par Date</option>
+                                        </select>
+                                        <input type="text" class="form-control form-control-default date-ranger Date_Type_Changement" id="Range_1" name="date_ranger" style="width:190px;display:inline-block;margin-right:5px;background-color:#fec918;">
+                                    </div>
+                                    
+                                </div>
                                 <button type="submit" class="btn btn-success waves-effect waves-light">Modifier Employee</button>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
                             </div>
                         </div>
                             </form>
@@ -76,10 +106,5 @@
 
     </div>
     <!-- content -->
-
-    <footer class="footer">
-        © 2019 Veltrix <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</span>.
-    </footer>
-
 </div>
 @endsection

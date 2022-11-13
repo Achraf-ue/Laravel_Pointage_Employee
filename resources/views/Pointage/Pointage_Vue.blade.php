@@ -54,7 +54,7 @@
                             </select>
                             <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
-                                <tr>
+                                <tr >
                                     <th>id</th>
                                     <th>Matricule</th>
                                     <th>Employee</th>
@@ -68,14 +68,17 @@
 
                                 <tbody class="Pointage_Div">
                                 @foreach ($Pointages as $Pointage)
-                                <tr>
+                                <tr @if ($Pointage->Type_Ajouter == 1)
+                                    style="background-color: #3498DB;"
+                                @endif >
+                                    <?php $Pointage->Temp_Travaille = intdiv($Pointage->Temp_Travaille, 60).' Heur : '. ($Pointage->Temp_Travaille % 60).' Minutes';   ?>
                                     <td>{{$Pointage->id}}</td>
                                     <td>{{$Pointage->Cin}}</td>
                                     <td>{{$Pointage->Nom.' '.$Pointage->Prenom }}</td>      
                                     <td>{{$Pointage->Date_Jour}}</td>
                                     <td>{{$Pointage->Date_Entre}}</td>
                                     <td>{{$Pointage->Date_Sortir}}</td> 
-                                    <td>{{$Pointage->Temp_Travaille.' '}} minutes </td> 
+                                    <td>{{$Pointage->Temp_Travaille.' '}}</td> 
                                 </tr>
                                 @endforeach
                                 </tbody>
@@ -85,9 +88,6 @@
                     </div>
                 </div> <!-- end col -->
             </div> <!-- end row -->
-           
-
-
         </div>
         <!-- container-fluid -->
 

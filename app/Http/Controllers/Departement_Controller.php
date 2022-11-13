@@ -37,7 +37,12 @@ class Departement_Controller extends Controller
        $data = new Deparetement();
        $data->Deparetement_Nom = $request->Deparetement_Nom;
        $data->Date_Debut = $request->Date_Debut;
+       $data->Date_Debut_Samedi = $request->Date_Debut_1;
        $data->Date_Fin = $request->Date_Fin;
+       $data->Date_Fin_Samedi = $request->Date_Fin_1;
+       $data->tollerence_active = $request->tollerence_active;
+       $data->tollerence_soustraire = $request->tollerence_soustraire;
+       $data->tollerence = $request->tollerence;
        $Count  = Deparetement::where('Deparetement_Nom','=',$data->Deparetement_Nom)->count();
        if($Count == 0 && $data->Deparetement_Nom != null )
        {
@@ -66,11 +71,39 @@ class Departement_Controller extends Controller
         $Data = Deparetement::find($id);
         $Data->Deparetement_Nom = $request->Departement;
         $Data->Date_Debut = $request->Date_Debut;
+        $Data->Date_Debut_Samedi = $request->Date_Debut_1;
         $Data->Date_Fin = $request->Date_Fin;
+        $Data->Date_Fin_Samedi = $request->Date_Fin_1;
+        $Data->tollerence_active = $request->tollerence_active;
+        $Data->tollerence_soustraire = $request->tollerence_soustraire;
+        $Data->tollerence = $request->tollerence;
         $Data->save();
         $Deparetement = Deparetement::find($id);
-        $notification = array('message' => 'Bien modifier', 'alert-type' => 'success');
+        $notification = array('message' => 'Bien modifier departement', 'alert-type' => 'success');
         return redirect()->route('Departement_Vue',compact('Deparetement'))->with($notification);
 
+    }
+    public function Departement_Modal(Request $request)
+    {
+        if($request->ajax())
+        {
+        $Id_departement = $_GET['Id_departement'];
+        $Deparetement = DB::table('deparetements')->where('id','=',$Id_departement)->first();
+        $Employees = DB::table('employes')->where('Departement','=',$Id_departement)->get();
+        $output = '';
+        $output .='<table border="0" width="100%">';
+        foreach($Employees as $Employee)
+        {
+        $output .='<tr>
+        <td style="padding:10px;">  
+        <p>Nom complet       : '.$Employee->Nom.' '.$Employee->Prenom.'</p>';
+        
+        }
+        $output .='<p>Plagehoraire  lundi à vendredi     : '.$Deparetement->Date_Debut.'  /  '.$Deparetement->Date_Fin.'</p>';
+        $output .='<p>Plagehoraire  samedi     : '.$Deparetement->Date_Debut_Samedi.'  /  '.$Deparetement->Date_Fin_Samedi.'</p>';
+        $output .= '</table>';
+
+        return response($output);
+        }
     }
 }

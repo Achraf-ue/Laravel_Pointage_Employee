@@ -24,12 +24,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST" action="{{route('Ajouter_Employee_')}}" >
+                            <form method="POST" action="{{route('Ajouter_Employee_')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group row">
-                                <label for="example-text-input" class="col-sm-2 col-form-label">Cin</label>
+                                <label for="example-text-input" class="col-sm-2 col-form-label">Matricule</label>
                                 <div class="col-sm-10">
-                                   <input class="form-control" type="text" placeholder="Cin"  name="Cin" id="Cin">
+                                   <input class="form-control" type="text" placeholder="Matricule"  name="Cin" id="Cin">
                                 </div>
                             </div>
                                 <div class="form-group row">
@@ -45,9 +45,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Telephone</label>
+                                    <div class="col-sm-10">
+                                       <input class="form-control" type="text" placeholder="telephone"    name="Telephone" id="telephone">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Adress</label>
                                     <div class="col-sm-10">
                                        <input class="form-control" type="text" placeholder="Adress" name="Adress" id="Adress">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="example-text-input"   class="col-sm-2 col-form-label">Image</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="filestyle" data-input="false" name="Image" data-buttonname="btn-secondary">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -60,7 +72,10 @@
                                         </select>
                                     </div>
                                 </div>
+                                
                                 <button type="submit" class="btn btn-success waves-effect waves-light">Ajouter Employee</button>
+                                <br>
+                                <br>
                             </div>
                         </div>
 
@@ -76,10 +91,5 @@
 
     </div>
     <!-- content -->
-
-    <footer class="footer">
-        © 2019 Veltrix <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</span>.
-    </footer>
-
 </div>
 @endsection

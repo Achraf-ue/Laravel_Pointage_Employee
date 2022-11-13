@@ -28,6 +28,9 @@
                     <div class="float-right d-none d-md-block">
                     <a href="{{route('Ajouter.departement')}}" ><button type="button" class="btn btn-success waves-effect waves-light">+</button></a>
                     </div>
+                    <div class="float-right mr-2 d-none d-md-block">
+                        <a href="{{route('Ajouter.Employee')}}" ><button type="button" class="btn btn-danger  waves-effect waves-light">Ajouter employee</button></a>
+                    </div>
                     <div class="form-group row" style="text-align: center">
                     
                         <div class="col-sm-10">

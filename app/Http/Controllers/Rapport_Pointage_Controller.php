@@ -73,6 +73,19 @@ class Rapport_Pointage_Controller extends Controller
 
         }
     }
+    public function Chart_rapport(Request $request)
+    {
+        if($request->ajax())
+        {
+            $now  = Carbon::now()->format('Y-m-d');
+            $Count_rtard = DB::table('retards')->where('read_at','!=','1')->count();
+            $Count_absence = DB::table('absences')->where('read_at','!=','1')->count();
+            //Congé
+            $Count_Congé = DB::table('congés')->where('Date_Debut','<=',$now)->where('Date_Fin','>=',$now)->count();
+         $a = [$Count_absence,$Count_rtard,$Count_Congé];
+         return response($a);
+        } 
+    }
     public function Rapport_Pointage_Filter(Request $request)
     {
         if($request->ajax())
@@ -104,6 +117,7 @@ class Rapport_Pointage_Controller extends Controller
                 $date = Carbon::parse($Rapport_Pointage->Date_Jour)->locale('fr_FR');
                 $date_Entre = Carbon::parse($Rapport_Pointage->Date_Entre)->locale('fr_FR');
                 $date_Sortir = Carbon::parse($Rapport_Pointage->Date_Sortir)->locale('fr_FR');
+                $Rapport_Pointage->R_T = intdiv($Rapport_Pointage->R_T, 60).':'. ($Rapport_Pointage->R_T % 60);
                 $Rapport_Pointage->Temp_Traville = intdiv($Rapport_Pointage->Temp_Traville, 60).':'. ($Rapport_Pointage->Temp_Traville % 60);
                 $Rapport_Pointage->Temp_Traville_supplementaire = intdiv($Rapport_Pointage->Temp_Traville_supplementaire, 60).':'. ($Rapport_Pointage->Temp_Traville_supplementaire % 60);
                 $Motive_Absences = DB::table('motif__absences')->orderBy('created_at','desc')->get();
@@ -126,7 +140,7 @@ class Rapport_Pointage_Controller extends Controller
                 <td>'.$Rapport_Pointage->Temp_Traville_supplementaire.'</td>
                 <td>0</td><td>0</td>';
                 if($Rapport_Pointage->R_T != null)
-                $output .='<td>'.$Rapport_Pointage->R_T.' Minutes</td>';
+                $output .='<td>'.$Rapport_Pointage->R_T.'</td>';
                 else
                 $output .= '<td>0 Minutes</td>';
                 $output .='<td>'.$Rapport_Pointage->Absence.'</td>
@@ -186,7 +200,7 @@ class Rapport_Pointage_Controller extends Controller
         {
             $Id_Rapport        = $_GET['Id_Rapport'];
             $Rapport_Pointages = DB::table('pointage__employees')->where('Temp_Retard',$Id_Rapport)->where('Type_Pointage','Rapport')->get();
-            $output = '<h1 style="text-align: center;">Rapport Pointage <a href=""><button type="button"    class="btn btn-info waves-effect waves-light"><i class="mdi mdi-file-pdf"></i></button></a></h1>
+            $output = '<h1 style="text-align: center;">Rapport Pointage <a data-id="'.$Id_Rapport.'" class="rapport_detailles_pointage_pdf"><button type="button"   class="btn btn-info waves-effect waves-light"><i class="mdi mdi-file-pdf"></i></button></a></h1>
                         <table style="width: 500px; margin-left:auto; 
                 margin-right:auto; margin-bottom:20px;" id="customers">
                 <tr>
@@ -226,5 +240,70 @@ class Rapport_Pointage_Controller extends Controller
 
 
 
+    }
+    //Rapport detailles 
+    public function Generate_detailles__Rapport_Pointage_Pdf(Request $request)
+    {
+        if($request->ajax())
+        {
+            $Id_rapport  = $_GET['Id_rapport'];
+            $Employee = DB::table('employes')
+            ->join('rapport__pointages', 'employes.id', '=', 'rapport__pointages.Id_Employee')
+            ->where('rapport__pointages.id',$Id_rapport)
+            ->first();
+
+
+
+
+            $rapport_pointages =  DB::table('pointage__employees')->where('Type_Pointage','Rapport')->where('Temp_Retard',$Id_rapport)->get();
+            $Totale =  DB::table('pointage__employees')->where('Type_Pointage','Rapport')->where('Temp_Retard',$Id_rapport)->sum('Temp_Travaille');
+            $fileName = ' ';
+            
+            $pdf = PDF::loadView('Pointage.Rapport_Pointage_Detailles_Pdf',compact('rapport_pointages','Totale','Employee'));
+            $path = public_path('pdf/');
+            $fileName =  time().'.'. 'pdf' ;
+            $pdf->save($path . '/' . $fileName);
+            $pdf = public_path('pdf/'.$fileName);
+            $fileName = 'http://localhost/Projet_Laravel/Gestion_Pointage/public/pdf/'.$fileName;
+        }
+        return response($fileName);
+    }
+    //Fin rapport detailles
+    public function Generate__Retard_Pointage_Pdf(Request $request)
+    {
+        if($request->ajax())
+        {
+            $Generate_Retards = $_GET['Generate_Retards'];
+            $Filter_1 = $_GET['Filter_1'];
+            $Date_fin = $_GET['Date_fin'];
+            $Date_debut = $_GET['Date_debut'];
+            $output ='';
+
+            if($Filter_1 != 'Tous')
+            $Retards = DB::select("select retards.id,employes.Cin,retards.Temps_Retard,retards.Date_Entre,deparetements.Deparetement_Nom,deparetements.Date_Debut,deparetements.Date_Fin,employes.Nom,employes.Prenom,retards.Date_Jour from retards INNER JOIN deparetements on deparetements.id = retards.Id_Departement INNER JOIN employes on employes.id = retards.Id_Employee where retards.Date_Jour BETWEEN '$Date_debut' and '$Date_fin' and employes.id = '$Filter_1'");
+            else
+            if($Filter_1 == 'Tous')
+            $Retards = DB::select("select retards.id,employes.Cin,employes.id,retards.Temps_Retard,retards.Date_Entre,deparetements.Deparetement_Nom,deparetements.Date_Debut,deparetements.Date_Fin,employes.Nom,employes.Prenom,retards.Date_Jour from retards INNER JOIN deparetements on deparetements.id = retards.Id_Departement INNER JOIN employes on employes.id = retards.Id_Employee where retards.Date_Jour BETWEEN '$Date_debut' and '$Date_fin'");
+            
+            
+            
+
+        $fileName = ' ';
+        if($Generate_Retards == 'Pdf')
+        {
+            $pdf = PDF::loadView('Pointage.Retard_Pdf',compact('Retards'));
+            $path = public_path('pdf/');
+            $fileName =  time().'.'. 'pdf' ;
+            $pdf->save($path . '/' . $fileName);
+
+        $pdf = public_path('pdf/'.$fileName);
+        $fileName = 'http://localhost/Projet_Laravel/Gestion_Pointage/public/pdf/'.$fileName;
+        }
+        //return response($fileName);
+       
+        }
+         return response($fileName);
+        /*$pdf = Pdf::loadView('facture_echeance.Facture_pdf');
+        return response()->$pdf->download('invoice.pdf');*/
     }
 }

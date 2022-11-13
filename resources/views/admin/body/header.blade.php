@@ -1,82 +1,71 @@
-
-<?php
-/*use App\Models\Notification;
-use Illuminate\Support\Facades\DB;
-$Count = Notification::where('Lire_notification','=','0')->count();
-$Notifications = Notification::where('Lire_notification','=','0')->get();
-//$Count = DB::select('select count(*) from users')
-//$Count = 3;*/
-?>
 <div class="topbar">
 
     <!-- LOGO -->
     <div class="topbar-left">
         <a href="index.html" class="logo">
             <span>
-                    <img src="assets/images/logo-light.png" alt="" height="18">
+                    <img src="{{ asset(Auth::user()->profile_photo_path)}}" alt="" height="60">
                 </span>
-            <i>
-                    <img src="assets/images/logo-sm.png" alt="" height="22">
-                </i>
         </a>
     </div>
-
     <nav class="navbar-custom">
         <ul class="navbar-right list-inline float-right mb-0">
-            <li class="dropdown notification-list list-inline-item d-none d-md-inline-block">
-                <form role="search" class="app-search">
-                    <div class="form-group mb-0">
-                        <input type="text" class="form-control" placeholder="Search..">
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </div>
-                </form>
-            </li>
-
             <!-- language-->
             <!-- full screen -->
-            <li class="dropdown notification-list list-inline-item d-none d-md-inline-block">
-                <a class="nav-link waves-effect" href="#" id="btn-fullscreen">
-                    <i class="mdi mdi-fullscreen noti-icon"></i>
-                </a>
-            </li>
-
-            <!-- notification -->
+            <!-- notification retrd -->
+            <!-- Teste  -->
             <li class="dropdown notification-list list-inline-item">
-                <a id="Notification" class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <i class="mdi mdi-bell-outline noti-icon"></i>
-                    <span class="badge badge-pill badge-danger noti-icon-badge" id='Notification_Count'>0</span>
+                <a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <i class="mdi mdi-clipboard-account-outline noti-icon"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg">
                     <!-- item-->
-                    <h6 style="text-align: center" class="dropdown-item-text">
-                            Notifications 0
-                        </h6>
+                    
                     <div class="slimscroll notification-item-list">
-                        <!--    <a class="dropdown-item notify-item">
-                            <div class="notify-icon bg-danger"><i class="mdi mdi-message-text-outline"></i></div>
-                            <p class="notify-details"><span class="text-muted"></span></p>
-                            </a>  -->
-                        
-                    </div>
-                    <!-- All-->
-                <!--    <a href="javascript:void(0);" class="dropdown-item text-center text-primary">
-                            View all <i class="fi-arrow-right"></i>
-                        </a>  -->
+                        <!-- item-->
+                        <a href="{{route('Ajouter.Employee')}}" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter employee<span class="text-muted"></span></p>
+                        </a>
+                        <a href="{{route('Ajouter.departement')}}" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter departement<span class="text-muted"></span></p>
+                        </a>  
+                        <a href="{{route('Ajouter.Fete')}}" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter Fetes<span class="text-muted"></span></p>
+                        </a>  
+                        <a href="{{route('Ajouter.absence')}}" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter Absences<span class="text-muted"></span></p>
+                        </a>
+                        <a href="{{route('Ajouter.congé')}}" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter congé<span class="text-muted"></span></p>
+                        </a>  
+                        <a href="javascript:void(0);" class="dropdown-item notify-item active">
+                            <p class="notify-details">Ajouter pointeuse<span class="text-muted"></span></p>
+                        </a>               
                 </div>
             </li>
+            <!-- Fin teste  -->
+            <li class="dropdown notification-list list-inline-item">
+                <div class="Pointage_Retard_Notification" >
+                
+                </div>
+            </li>
+            <!-- Fin notification retard -->
+            <!-- notification Absences  -->
+            <li class="dropdown notification-list list-inline-item">
+                <div class="Pointage_Absences_Notification" >
+                
+                </div>
+            </li>
+            <!-- Fin notification absences   -->
             <li class="dropdown notification-list list-inline-item">
                 <div class="dropdown notification-list nav-pro-img">
                     <a class="dropdown-toggle nav-link arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{ asset('backend/assets/images/users/user-4.jpg')}}" alt="user" class="rounded-circle">
+                        <img src="{{ asset('backend/assets/images/users/202203112055download.jpg')}}" alt="user" class="rounded-circle">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                         <!-- item-->
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i> Profile</a>
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-wallet m-r-5"></i> My Wallet</a>
-                        <a class="dropdown-item d-block" href="#"><span class="badge badge-success float-right">11</span><i class="mdi mdi-settings m-r-5"></i> Settings</a>
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline m-r-5"></i> Lock screen</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="{{route('admin.logout')}}"><i class="mdi mdi-power text-danger"></i> Logout</a>
+                        <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="mdi mdi-account-circle m-r-5"></i> Profile</a>
+                        <a class="dropdown-item text-danger" href="{{route('admin.logout')}}"><i class="mdi mdi-power text-danger"></i>Déconnexion</a>
                     </div>
                 </div>
             </li>

@@ -10,27 +10,11 @@
                   <div class="col-sm-6">
                       <h4 class="page-title">Dashboard</h4>
                       <ol class="breadcrumb">
-                          <li class="breadcrumb-item active">Welcome to Veltrix Dashboard</li>
+                        <!--  <li class="breadcrumb-item active">Welcome to Veltrix Dashboard</li> -->
                       </ol>
 
                   </div>
                   <div class="col-sm-6">
-                  
-                      <div class="float-right d-none d-md-block">
-                          <div class="dropdown">
-                              <button class="btn btn-primary dropdown-toggle arrow-none waves-effect waves-light" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="mdi mdi-settings mr-2"></i> Settings
-                              </button>
-                              <div class="dropdown-menu dropdown-menu-right">
-                                  <a class="dropdown-item" href="#">Action</a>
-                                  <a class="dropdown-item" href="#">Another action</a>
-                                  <a class="dropdown-item" href="#">Something else here</a>
-                                  <div class="dropdown-divider"></div>
-                                  <a class="dropdown-item" href="#">Separated link</a>
-                              </div>
-                          </div>
-                      </div>
-
                   </div>
               </div>
           </div>
@@ -50,7 +34,7 @@
                           </div>
                           <div class="pt-2">
                               <div class="float-right">
-                                  <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                  <a href="{{route('Departement_Vue')}}" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                               </div>
 
                               <p class="text-white-50 mb-0">Since last month</p>
@@ -72,7 +56,7 @@
                           </div>
                           <div class="pt-2">
                               <div class="float-right">
-                                  <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                  <a href="{{route('Employee')}}" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                               </div>
 
                               <p class="text-white-50 mb-0">Since last month</p>
@@ -92,7 +76,7 @@
                           </div>
                           <div class="pt-2">
                               <div class="float-right">
-                                  <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                  <a href="{{route('Pointage.Entre')}}" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                               </div>
 
                               <p class="text-white-50 mb-0">Since last month</p>
@@ -112,7 +96,7 @@
                           </div>
                           <div class="pt-2">
                               <div class="float-right">
-                                  <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                                  <a href="{{route('Pointage.Sortir')}}" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
                               </div>
 
                               <p class="text-white-50 mb-0">Since last month</p>
@@ -120,6 +104,70 @@
                       </div>
                   </div>
               </div>
+              
+              <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-left mini-stat-img mr-4">
+                                <img src="{{ asset('backend/assets/images/services-icon/01.png')}}" alt="" >
+                            </div>
+                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Retard</h5>
+                            <h4 class="font-500">{{$Count_rtard}}</h4>
+                            
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-right">
+                                <a href="#retard"  class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                            </div>
+
+                            <a ><p class="text-white-50 mb-0"></p></a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-left mini-stat-img mr-4">
+                                <img src="{{ asset('backend/assets/images/services-icon/01.png')}}" alt="" >
+                            </div>
+                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Congé</h5>
+                            <h4 class="font-500">{{$Count_Congé}}</h4>
+                            
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-right">
+                                <a  class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                            </div>
+
+                            <p class="text-white-50 mb-0">Since last month</p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="card mini-stat bg-primary text-white">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="float-left mini-stat-img mr-4">
+                                <img src="{{ asset('backend/assets/images/services-icon/01.png')}}" alt="" >
+                            </div>
+                            <h5 class="font-16 text-uppercase mt-0 text-white-50">Absence</h5>
+                            <h4 class="font-500">{{$Count_absence}}</h4>
+                            
+                        </div>
+                        <div class="pt-2">
+                            <div class="float-right">
+                                <a href="#ABSENCE" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
+                            </div>
+
+                            <p class="text-white-50 mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div>
           <!-- end row -->
 
@@ -164,8 +212,12 @@
              
           </div>-->
           <!-- end row -->
-          <div class="row">
-                
+          <div id="chart-container" style="width:400px;">
+            <canvas id="pie-chart" ></canvas>
+          </div>
+          
+          <div class="row" id="retard"   >
+              
             <div class="col-12">
                 <div class="card">
                     <div style="text-align: center" class="card-body">
@@ -173,7 +225,7 @@
                             <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" name="Employe" id="Employe_1">
                                 <option value="Tous">Tous</option>
                                 @foreach ($Employees as $Employe)
-                                <option value="{{$Employe->Cin}}">{{$Employe->Cin}}</option>
+                                <option value="{{$Employe->id}}">{{$Employe->Nom.' '.$Employe->Prenom}}</option>
                                 @endforeach
                             </select>
                             <input type="text" class="form-control form-control-default date-ranger" id="Range_1" name="date-ranger" style="width:190px;display:inline-block;margin-right:5px;">
@@ -182,8 +234,16 @@
                             </div>
                     </div>
             </div>
-                <div class="card">
+                <div class="card"  >
+                    <h1 style="text-align: center;">Retards</h1>
                     <div class="card-body">
+                        <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" id="Generate_Pdf_Retards_Pointage">
+                            <option value="0">Generate Option</option>
+                            <option value="Pdf">Pdf</option>
+                            <option value="Excel" >Excel</option>
+                        </select>
+                        <br>
+                        <br>
                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                             <tr>
@@ -208,12 +268,68 @@
                                 $date = Carbon\Carbon::parse($Retard->Date_Jour)->locale('fr_FR');
                                 //$date->year.' / '.$date->monthName.' / '.$date->dayName
                                 ?>
-                                <td>{{$date->year.' / '.$date->monthName.' / '.$date->dayName}} </td>
+                                <td>{{$Retard->Date_Jour.' '.$date->dayName}} </td>
                                 <td>{{$Retard->Date_Entre}}</td>
-                                <td>{{$Retard->Temps_Retard.' Minutes'}}</td>
+                                <?php $Retard->Temps_Retard = intdiv($Retard->Temps_Retard, 60).' Heures : '. ($Retard->Temps_Retard % 60).' Minutes';   ?>
+                                <td>{{$Retard->Temps_Retard}}</td>
                                 <th><a class="view_detaiile_retard" data-id="{{$Retard->id}}" ><button type="button" id="Button_View"   class="btn btn-info waves-effect waves-light"><i class="ti-eye"></i></button></a> </th>
                             </tr>
                             @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" id="ABSENCE">
+                    <div style="text-align: center" class="card-body">
+                        
+                            <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" name="Employe" id="Employe_3">
+                                <option value="Tous">Tous</option>
+                                @foreach ($Employees as $Employe)
+                                <option value="{{$Employe->id}}">{{$Employe->Nom.' '.$Employe->Prenom}}</option>
+                                @endforeach
+                            </select>
+                            <input type="text" class="form-control form-control-default date-ranger" id="Range_2" name="date-ranger" style="width:190px;display:inline-block;margin-right:5px;">
+                            <div class="float-right d-none d-md-block">
+                                <a id="Cherche_Absence" ><button type="button" class="btn btn-success waves-effect waves-light">Cherche Absence</button></a>
+                            </div>
+                    </div>
+                </div>
+                <div class="card">
+                    
+                    <h1 style="text-align: center;">Absences</h1>
+                    <div class="card-body">
+                        <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" id="Generate_Pdf_Absence_Pointage">
+                            <option value="0">Generate Option</option>
+                            <option value="Pdf">Pdf</option>
+                            <option value="Excel" >Excel</option>
+                        </select>
+                        <br>
+                        <br>
+                    <div class="card-body">
+                        <table id="table_1" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                            <th>Id</th>
+                            <th>Matricule</th>
+                            <th>Nom </th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                            
+                            </thead>
+
+
+                            <tbody class="Absence_Div">
+                                @foreach ( $Absences as $Absence )
+                                <tr>
+ 
+                                 <td>{{$Absence->id}}</td>
+                                 <td>{{$Absence->Cin}}</td>
+                                 <td>{{$Absence->Nom_Employee}}</td>
+                                 <td>{{$Absence->Date_Debut}}</td>
+                                 <th><a class="view_detaiile_Absences" data-id="{{$Absence->id}}" ><button type="button" id="Button_View"   class="btn btn-info waves-effect waves-light"><i class="ti-eye"></i></button></a> </th>
+
+                                 
+                             </tr> 
+                             @endforeach
                             </tbody>
                         </table>
                     </div>

@@ -25,6 +25,32 @@ class Employes extends Controller
         }
          
     }
+    public function Employee_Modal(Request $request)
+    {
+        if($request->ajax())
+        {
+            $Id_employee = $_GET['Id_employee'];
+            $output ='';
+            $Employe  = DB::table('employes')->where('id',$Id_employee)->first();
+            $Departement = DB::table('deparetements')
+            ->join('employes', 'employes.Departement', '=', 'deparetements.id')
+            ->where('employes.id',$Id_employee)
+            ->first();
+            $output ='<table border="0" width="100%">
+                <tr>
+                <td style="padding:10px;">  
+                <p>Matricule         : '.$Employe->Cin.'</p>
+                <p>Nom complet       : '.$Employe->Nom.' '.$Employe->Prenom.'</p>
+                <p>telephone       : '.$Employe->telephone.'</p>
+                
+                <p>Departement        : '.$Departement->Deparetement_Nom.'</p>
+                <p>Date Debut      : '.$Departement->Date_Debut.'</p>
+                <p>Date Fin      : '.$Departement->Date_Fin.'</p>';
+                $output .= '</table>';
+            //$output = 'Matricule : '.$Employe->Cin.' Nom : '.$Employe->Nom.' Departement :'.$Departement->Deparetement_Nom.' Heure entre :'.$Departement->Date_Debut.' Heure sortir :'.$Departement->Date_Fin;
+            return response($output);
+        }
+    }
     
     public function Ajouter_Employee(Request $request)
     {
@@ -33,11 +59,29 @@ class Employes extends Controller
        $data->Nom = $request->Nom;
        $data->Prenom = $request->Prenom;
        $data->Adress = $request->Adress;
+       $data->telephone = $request->Telephone;
+       
        $data->Departement = $request->Departement_employee;
       
        $Count  = Employe::where('Cin','=',$data->Cin)->count();
        if($Count == 0 )
        {
+                if($request->file('Image') != null)
+                {
+                $user_image = $request->file('Image');
+                $name_gen = hexdec(uniqid());
+                $img_ext  = strtolower($user_image->getClientOriginalExtension()); 
+                $img_name = $name_gen.'.'.$img_ext;
+                $Up_Location = 'Images/User_Profile/';
+                $Last_image = $Up_Location.$img_name;
+                $user_image->move($Up_Location,$img_name);
+                $data->Employee_Image = $Last_image;
+                }
+                else
+                $data->Employee_Image = 'backend/assets/images/users/202203112055download.jpg';
+                
+        
+        
         $data->save();
         $notification = array('message' => 'Bien Ajouter', 'alert-type' => 'success'); 
         $Employes = DB::table('employes')->orderBy('created_at', 'desc')->get();
@@ -66,17 +110,41 @@ class Employes extends Controller
     public function Employee_Modifier(Request $request)
     {
         $data = [];
-        $id = $request->id;
+        $id = $request->id_employee;
         $data = Employe::find($id);
-        $data->Cin = $request->Cin;
+        $data->Departement_activation = '0';
+        $data->Cin = $request->Matricule;
         $data->Nom = $request->Nom;
         $data->Prenom = $request->Prenom;
         $data->Adress = $request->Adress;
+        if($request->Type_Changement == '1')
         $data->Departement = $request->Departement_employee;
+        else
+        if($request->Type_Changement == '2')
+        {
+            $data->Date_Debut = '2022-11-01';
+            $data->Date_Fin =   '2022-11-07';
+            $data->Departement_activation = '1';
+
+
+        
+
+
+        }
+        if($request->file('Image') != null)
+        {
+                $user_image = $request->file('Image');
+                $name_gen = hexdec(uniqid());
+                $img_ext  = strtolower($user_image->getClientOriginalExtension()); 
+                $img_name = $name_gen.'.'.$img_ext;
+                $Up_Location = 'Images/User_Profile/';
+                $Last_image = $Up_Location.$img_name;
+                $user_image->move($Up_Location,$img_name);
+                $data->Employee_Image = $Last_image;
+        }
         $data->save();
         $Employes = Employe::find($id);
         $notification = array('message' => 'Bien modifier', 'alert-type' => 'success');
         return redirect()->route('Employee',compact('Employes'))->with($notification);
-
     }
 }

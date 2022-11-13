@@ -32,6 +32,7 @@
                                        <input class="form-control" type="text" placeholder="Nom département"  name="Deparetement_Nom" id="Deparetement_Nom">
                                     </div>
                                 </div>
+                                <h5 style="text-align: center;">Horaire de lundi à vendredi</h5>
                                 <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Hour Début </label>
                                     <div class="col-sm-10">
@@ -44,6 +45,19 @@
                                        <input class="form-control" type="time" value="18:00"  name="Date_Fin" id="Date_Fin">
                                     </div>
                                 </div>
+                                <h5 style="text-align: center;">Horaire de samedi</h5>
+                                <div class="form-group row">
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Hour Début </label>
+                                    <div class="col-sm-10">
+                                       <input class="form-control" type="time" value="09:00"  name="Date_Debut_1" id="Date_Debut">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Hour Fin</label>
+                                    <div class="col-sm-10">
+                                       <input class="form-control" type="time"  value="12:00"   name="Date_Fin_1" id="Date_Fin">
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Avertisement</label>
                                     <div class="col-sm-1">
@@ -52,23 +66,24 @@
                                 </div>
                                 <div id="Avertisement_div">
                                      <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Minute n'est pas depasse</label>
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">Tolerane de retard</label>
                                     <div class="col-sm-10">
-                                       <input class="form-control" type="number" placeholder="0"  name="Deparetement_Nom" id="">
+                                       <input class="form-control" type="number" value="0" placeholder="0"  name="tollerence" id="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="example-text-input" class="col-sm-2 col-form-label">Combien de minutes allez vous perdere ?</label>
+                                    <label for="example-text-input" class="col-sm-2 col-form-label">penalite de retard</label>
                                     <div class="col-sm-10">
-                                       <input class="form-control" type="number" placeholder="0"  name="Deparetement_Nom" id="">
+                                       <input class="form-control" type="number" value="0" placeholder="0"  name="tollerence_soustraire" id="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="example-text-input" class="col-sm-2 col-form-label">Activation</label>
                                     <div class="col-sm-10">
-                                        <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" name="Employe">
-                                            <option value="1">Activer</option>
+                                        <select style="width:150px;display:inline-block;margin-right:5px;" class="form-control" name="tollerence_active">
                                             <option value="0" selected>Désactiver</option>
+                                            <option value="1">Activer</option>
+                                            
                                         </select>
                                     </div>
                                 </div>
@@ -90,10 +105,5 @@
 
     </div>
     <!-- content -->
-
-    <footer class="footer">
-        © 2019 Veltrix <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</span>.
-    </footer>
-
 </div>
 @endsection
